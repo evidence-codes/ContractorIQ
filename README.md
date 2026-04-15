@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ContractorIQ
+
+AI-powered contract analysis workspace for freelancers and agencies.
+
+## What is ContractorIQ?
+ContractorIQ ingests a PDF/DOCX contract, extracts scope, flags risky clauses, estimates delivery hours, and drafts counter-proposal language in one workflow. It supports authenticated production use and a public interactive demo path. The app uses Supabase for auth/data/storage and can run analysis through either Anthropic or OpenAI via env-controlled provider switching.
+
+## Tech Stack
+
+### Frontend
+| Technology | Version | Purpose |
+|---|---|---|
+| Next.js | 16.2.3 | App router UI + API routes |
+| React | 19.2.4 | Component rendering |
+| Tailwind CSS | 4.x | Styling system |
+| Framer Motion | 12.38.0 | UI animations |
+| GSAP | 3.15.0 | Scroll and hero animations |
+| Zustand | 5.0.12 | Analysis upload/result state |
+
+### Backend & Infrastructure
+| Technology | Version | Purpose |
+|---|---|---|
+| Supabase Auth | managed | Magic link + OAuth sessions |
+| Supabase Postgres | managed | Analyses, chat, preferences |
+| Supabase Storage | managed | Contract file storage |
+| Anthropic SDK | 0.88.0 | Claude analysis provider |
+| OpenAI SDK | 6.34.0 | GPT-4o-mini analysis provider |
+
+### Testing & Tooling
+| Technology | Version | Purpose |
+|---|---|---|
+| TypeScript | 5.x | Type safety |
+| ESLint | 9.x | Linting |
+| pnpm | 10.x | Package manager |
+
+## Key Features
+- Upload + analyze flow on `/analyze` with status and robust error diagnostics.
+- Public demo mode on `/analyze?demo=1` without auth.
+- Analyzer provider switch via env: Anthropic or OpenAI.
+- Dashboard/history + analysis detail route.
+- Preferences screen that affects pricing/negotiation behavior.
+- Avatar menu showing signed-in user name/email and sign-out.
+
+## Environment Variables
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-side privileged key for fallback storage upload |
+| `NEXT_PUBLIC_APP_URL` | App origin used for auth redirects |
+| `NEXT_PUBLIC_DEMO_MODE` | Demo-mode feature toggle |
+| `NEXT_PUBLIC_SHOW_GOOGLE_OAUTH` | Show/hide Google OAuth button in auth UI |
+| `ANTHROPIC_API_KEY` | Claude provider key |
+| `OPENAI_API_KEY` | OpenAI provider key |
+| `ANALYZER_PROVIDER` | `anthropic` or `openai` |
+| `OPENAI_ANALYSIS_MODEL` | OpenAI model id (default `gpt-4o-mini`) |
 
 ## Getting Started
-
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+- Apply DB and storage setup from `supabase/migrations/001_initial.sql` before first upload.
+- If AI billing is unavailable, analysis returns a demo fallback result and surfaces an in-UI notice.
